@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+enum ShapeName {
+    case triangle
+    case circle
+    case rectangle
+}
+
 struct Triangle: Shape {
     func path(in rect: CGRect) -> Path {
         let width = rect.width

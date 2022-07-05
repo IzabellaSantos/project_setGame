@@ -13,6 +13,7 @@ struct BuildCard: View {
     private struct DrawingConstants {
         static let cornerRadius: CGFloat = 10
         static let lindWidth: CGFloat = 3
+        static let opacityLevel: CGFloat = 0.3
     }
     
     var body: some View {
@@ -34,36 +35,52 @@ struct BuildCard: View {
                 
                 //shows to the user what is happening
                 if card.isSelected {
-                    shape.foregroundColor(.gray).opacity(0.5) //selected color
+                    shape.foregroundColor(.gray).opacity(DrawingConstants.opacityLevel) //selected color
                 }
                 if let isSet = card.isSet {
-                    shape.foregroundColor(isSet ? .green : .red).opacity(0.6) //colors match/dismatch
+                    shape.foregroundColor(isSet ? .green : .red).opacity(DrawingConstants.opacityLevel) //colors match/dismatch
                 }
             }
         })
     }
 
     
-    @ViewBuilder
+    
     private func symbol() -> some View {
+        var symbol: AnyShape
         switch card.symbol {
             case .triangle:
-                returnSymbolView("triangle")
+            symbol = returnSymbolView(.triangle)
             case .circle:
-                returnSymbolView("circle")
+            symbol = returnSymbolView(.circle)
             case .rectangle:
-                returnSymbolView("rectangle")
+            symbol = returnSymbolView(.rectangle)
         }
+        
+        return setSymbolShading(symbol)
     }
     
-    private func returnSymbolView(_ symbol: String ) -> some View {
-        let symbolFunction = (symbol == "circle" ? AnyShape(Circle()) : (symbol == "triangle" ? AnyShape(Triangle()) : AnyShape(Rectangle())))
+    private func returnSymbolView(_ symbol: ShapeName ) -> AnyShape {
+        var symbolFunction: AnyShape {
+            switch symbol {
+            case .triangle:
+                return AnyShape(Triangle())
+            case .circle:
+                return AnyShape(Circle())
+            case .rectangle:
+                return AnyShape(Rectangle())
+            }
+        }
         
+        return symbolFunction
+    }
+    
+    private func setSymbolShading(_ symbolFunction: AnyShape) -> some View {
         switch card.shading {
             case .solid:
                 return AnyView(symbolFunction)
             case .striped:
-                return AnyView(symbolFunction.opacity(0.5))
+                return AnyView(symbolFunction.opacity(DrawingConstants.opacityLevel))
             case .open:
                 return AnyView(symbolFunction.stroke())
         }
