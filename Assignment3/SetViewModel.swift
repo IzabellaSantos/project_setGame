@@ -18,6 +18,10 @@ class SetViewModel: ObservableObject {
         model.deck
     }
     
+    var discardPile: [Card] {
+        model.discardPile
+    }
+    
     var cards: [Card] {
         model.cards
     }

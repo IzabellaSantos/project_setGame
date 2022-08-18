@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SetModel {
     private(set) var deck: Array<Card>
+    private(set) var discardPile: Array<Card>
     private(set) var cards: Array<Card>
     
     private var indexOfchosen: [Int] {
@@ -24,6 +25,7 @@ struct SetModel {
     init() {
         deck = []
         cards = []
+        discardPile = []
         
         //deck array gets full (81 cards due to the all cases we need to have)
         var id = 0
@@ -50,7 +52,7 @@ struct SetModel {
     mutating func choose(_ card: Card) {
         if indexOfchosen.count == GameConstant.numberOfMatchCard {
             if isMatch() {
-                removeAndReplaceCard()
+                removeCard()
             }
             cards.indices.forEach {
                 cards[$0].isSelected = false
@@ -73,7 +75,7 @@ struct SetModel {
     mutating func dealThreeMoreCard() {
         if indexOfchosen.count == GameConstant.numberOfMatchCard {
             if isMatch() {
-                removeAndReplaceCard()
+                removeCard()
                 return
             }
         }
@@ -120,12 +122,14 @@ struct SetModel {
     }
     
     //remove the chosen card
-    private mutating func removeAndReplaceCard() {
+    private mutating func removeCard() {
         indexOfchosen.reversed().forEach({ i in
+            
+            cards[i].isSet = nil
+            cards[i].isSelected = false
+            
+            discardPile.append(cards[i])
             cards.remove(at: i)
-            if !deck.isEmpty { //if there still have cards, replace
-                cards.insert(deck.popLast()!, at: i) //this insert the new card in the right place wherer the other was
-            }
         })
     }
 }

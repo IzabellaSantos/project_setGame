@@ -37,14 +37,17 @@ struct BuildCard: View {
                 if card.isSelected {
                     shape.foregroundColor(.gray).opacity(DrawingConstants.opacityLevel) //selected color
                 }
+                
                 if let isSet = card.isSet {
-                    shape.foregroundColor(isSet ? .green : .red).opacity(DrawingConstants.opacityLevel) //colors match/dismatch
+                    if isSet {
+                        shape.foregroundColor(.green).opacity(DrawingConstants.opacityLevel).transition(.scale) //colors match/dismatch
+                    } else {
+                        shape.foregroundColor(.red).opacity(DrawingConstants.opacityLevel) //colors match/dismatch
+                    }
                 }
             }
         })
     }
-
-    
     
     private func symbol() -> some View {
         var symbol: AnyShape
@@ -98,5 +101,7 @@ struct BuildCard: View {
     }
     
 }
+
+
 
 
